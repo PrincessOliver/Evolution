@@ -5,6 +5,7 @@ var img3;
 var img4;
 var img5;
 var img6;
+var img7;
 var carnivores = [];
 var vehicles = [];
 var food = [];
@@ -12,17 +13,31 @@ var poison = [];
 
 var debug;
 
+//River variables:
+var riverWidth = 150
+var riverL = 400;
+var riverR = riverL + riverWidth;
+var riverM = riverL + (riverWidth/2);
+var mountWidth =150;
+var mountL =800;
+var mountY=100;
+var mountH =150;
+var mountR= mountL + mountWidth;
+var mountM= mountL + (mountWidth/2);
+
 function setup() {
   createCanvas(1200, 550);
+  frameRate(60);
   img=loadImage("Png til skole/Stem3.png.png");
   img2=loadImage("Png til skole/Carnivore2.png.png");
   img3=loadImage("Png til skole/perceptionbug.png.png");
   img4=loadImage("Png til skole/poisonperceptionbug.png.png");
   img5=loadImage("Png til skole/ultimateperceptionbug.png.png");
   img6=loadImage("Png til skole/Bigboi.png.png");
+  img7=loadImage("Png til skole/WaterBug.png.png");
 
 
-  for (var i = 0; i < 50; i++) {
+  for (var i = 0; i < 10; i++) {
     //Spawn Vehicles and positioning of them.
     var x = random(width);
     var y = random(height);
@@ -38,7 +53,7 @@ function setup() {
   }
   */
 
-  for (var i = 0; i < 60; i++) {
+  for (var i = 0; i < 50; i++) {
     //Spawn Food
     var x = random(width);
     var y = random(height);
@@ -68,7 +83,10 @@ function draw() {
   background(51);
   //image(img,0,0);
   fill(3, 78, 252);
-  rect(250, 0, 50, 1000);
+  rect(riverL, 0, riverWidth, height);   //River location +
+
+  // fill(168, 111, 50);
+  // rect(mountL, 100 ,mountWidth, mountH);
 
   for (i = 0; i < vehicles.length; i++){
       textSize(32);

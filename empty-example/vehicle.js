@@ -1,16 +1,15 @@
-
 var mr = 0.1;
-
+var speedBugCounter = 0;
 function Vehicle(x, y, dna) {
   this.acceleration = createVector(0, 0);
   this.velocity = createVector(0, -2);
   this.position = createVector(x, y);
   this.r = 4;
-  this.maxspeed = 2;
+  this.maxspeed = 1.5;
   this.maxforce = 0.8;
   this.size =20;
 
-  this.health = 0.5;
+  this.health = 0.50;
 
   this.dna = [];
   if (dna === undefined) {
@@ -27,7 +26,7 @@ function Vehicle(x, y, dna) {
     //health
     this.dna[5] = random(0.2,0.8);
     //size
-    this.dna[6] = random(3,5);
+    this.dna[6] = random(0,100);
   } else {
     // Mutation
     this.dna[0] = dna[0];
@@ -56,7 +55,7 @@ function Vehicle(x, y, dna) {
     }
     this.dna[6] = dna[6];
     if (random(1) < mr) {
-      this.dna[6] += random(-0.5 ,0.5);
+      this.dna[6] += random(0,100);
     }
   }
 
@@ -68,7 +67,7 @@ function Vehicle(x, y, dna) {
     // Update velocity
     this.velocity.add(this.acceleration);
     // Limit speed
-    this.velocity.limit(this.dna[4]);
+    this.velocity.limit(this.maxspeed);
     this.position.add(this.velocity);
     // Reset accelerationelertion to 0 each cycle
     this.acceleration.mult(0);
@@ -92,7 +91,7 @@ function Vehicle(x, y, dna) {
 
   this.clone = function() { //Reproduction of vehicle. Adopt Pos and DNA
     if (this.health > 0.98) {
-      this.health = 0.75;
+      this.health = 0.50;
       return new Vehicle(this.position.x-25, this.position.y,   this.dna);
 
     } else {
@@ -185,18 +184,26 @@ function Vehicle(x, y, dna) {
       img4.resize(this.size, this.size);
     }
 
-    if(this.dna[2]>=80&&this.dna[3]>=80){
+    if(this.dna[2]>=80&&this.dna[3]>=80){ //Turn into ultimateperceptionbug
       imageMode(CENTER);
       image(img5,0,0);
       img5.resize(this.size,this.size);
     }
 
-    if(this.dna[4]>9){
+    if(this.dna[4]>9){ //Speed Bug
       imageMode(CENTER);
       image(img6,0,0);
       img6.resize(this.size,this.size);
 
-      this.maxspeed=2.2;
+      this.maxspeed=1.8;
+
+    }
+    if(this.dna[6]>=90){ //WaterBug
+      imageMode(CENTER);
+      image(img7,0,0);
+      img7.resize(this.size,this.size);
+
+      this.maxspeed=1.3;
 
     }
 
@@ -216,7 +223,9 @@ function Vehicle(x, y, dna) {
 
   this.boundaries = function() {
     var d = 25;
-
+    // var riverL = 250;
+    // var riverM = 275;
+    // var riverR = 300;
     var desired = null;
 
     if (this.position.x < d) {
@@ -230,6 +239,27 @@ function Vehicle(x, y, dna) {
     } else if (this.position.y > height - d) {
       desired = createVector(this.velocity.x, -this.maxspeed);
     }
+    //RIVER Boundaries START
+
+    if ( this.position.x < riverR && this.position.x > riverM) {
+      desired = createVector(this.maxspeed, this.velocity.y);
+    } else if (this.position.x > riverL && this.position.x < riverM) {
+      desired = createVector(-this.maxspeed, this.velocity.y);
+    }
+    // //Mountain boundaries Start
+    // if ( this.position.x < mountR && this.position.x > mountM) {
+    //   desired = createVector(this.maxspeed, this.velocity.y);
+    // } else if (this.position.x > mountL && this.position.x < mountM) {
+    //   desired = createVector(-this.maxspeed, this.velocity.y);
+    // }
+
+    // if (this.position.y < d) {
+    //   desired = createVector(this.velocity.x, this.maxspeed);
+    // } else if (this.position.y > mountH - d*2) {
+    //   desired = createVector(this.velocity.x, -this.maxspeed);
+    // }
+
+
 
     if (desired !== null) {
       desired.normalize();
@@ -238,10 +268,22 @@ function Vehicle(x, y, dna) {
       steer.limit(this.maxforce);
       this.applyForce(steer);
     }
+/*
+    isColliding=false; //THIS IS FOR BOUNDARIES WITH RIVER. Waterbugs can cross
+        if(this.position.x < 650 && this.position.x > 600){
+          isColliding=true;
+        }
+        if(this.dna[6]>=90){
+          isColliding=false;
+        }
+        if(isColliding==true && this.position.x < 650){
+          this.position.x=750;
+        }
+        if(isColliding==true && this.position.x > 600){
+          this.position.x=500;
+        }
 
-    if(this.position,x,y < 250,0){
-      this.position= 500,500;
-    }
-
+        text("Speedbugs Alive: "+speedBugCounter, 10, 50);
+*/
   };
 }
